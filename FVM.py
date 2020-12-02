@@ -1,13 +1,14 @@
 import numpy as np
-import matplotlib.pyplot as mtp
-
+import matplotlib.pyplot as mpt
+import math
 
 # Problem: --- Ut + u*Ux = c Uxx + S
 # Not in time for now
 # https://web.cecs.pdx.edu/~gerry/class/ME448/lecture/pdf/convectionUpwind.pdf
 
+
 #Hash properties
-Nx = 50
+Nx = 500
 x = np.linspace(0,1,Nx + 1)
 dx = 1/Nx
 
@@ -15,20 +16,20 @@ dx = 1/Nx
 xmid = np.array([0.5 * (x[i-1] + x[i]) for i in range(1,len(x))])
 
 # Set u - velocity,c - diffusion, s - source, final time, timestep
-u = 1
-c = 1
-s = 3
+u = 50
+c = 12
+s = 5
 tfinal = 1
 dt = 0.001
+
+#Some boundary conditions - now constant
+a = 1
+b = 0
 
 #Set initial condition -- set constant
 U = np.array([5 for _ in range(len(xmid))])
 lenU = len(U)
 t = 0
-
-#Some boundary conditions - now constant
-a = 2
-b = 4
 
 #while(t < tfinal):
 
@@ -82,5 +83,13 @@ B[-1] = b
 phi = np.linalg.solve(A,B)
 
 
-mtp.plot(xmid, phi)
-mtp.show()
+#Exact solution
+PeL = u * 1/c
+pe = [a + (b - a)*(math.exp(u*xi/c) -1)/(math.exp(PeL)-1) for xi in x]
+Pex = u * dx / c
+Pexave = u * 1/(Nx-2)/c
+
+mpt.plot(x,pe, color="Green")
+
+mpt.plot(xmid, phi)
+mpt.show()
